@@ -62,7 +62,7 @@ class resultStudentKnow extends Command
 
             dump("run $index item: " . json_encode($item));
 
-            DB::insert("INSERT INTO gk_result_student_know (exam_id,
+            DB::insert("INSERT INTO ${exam_db}.gk_result_student_know (exam_id,
                                        branch_id,
                                        subject_id,
                                        student_id,
@@ -77,12 +77,12 @@ class resultStudentKnow extends Command
                   er.student_code,
                   ek.know_id,
                   sum(round(er.score / r.know_count, 2)) as score
-                FROM gk_exam_results er
-                  JOIN gk_exam_know ek ON ek.scoring_point_id = er.scoring_point_id
+                FROM ${exam_db}.gk_exam_results er
+                  JOIN ${exam_db}.gk_exam_know ek ON ek.scoring_point_id = er.scoring_point_id
                   JOIN (SELECT
                           scoring_point_id,
                           count(know_id) as know_count
-                        FROM gk_exam_know
+                        FROM ${exam_db}.gk_exam_know
                         GROUP BY scoring_point_id) as r 
                         on r.scoring_point_id = er.scoring_point_id
                 WHERE er.subject_id = ? and er.branch_id = ?
